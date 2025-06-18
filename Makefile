@@ -13,12 +13,12 @@ help: ## Show this help message
 
 # Setup and build
 .PHONY: setup
-setup: ## Create necessary directories and setup environment
+setup: ## Setup environment for reMarkable update server
 	@echo "Setting up reMarkable update server..."
-	@mkdir -p updates logs
-	@chmod 755 updates logs
-	@echo "Created updates/ and logs/ directories"
-	@echo "Place your firmware files (.signed files) in the updates/ directory"
+	@echo "Firmware files should be placed on NFS server at: /Docker/remarkable-update/updates/"
+	@echo "Ensure the following directories exist on your NFS server (192.168.0.134):"
+	@echo "  - /Docker/remarkable-update/updates/"
+	@echo "  - /Docker/remarkable-update/logs/"
 
 .PHONY: build
 build: ## Build the Docker image
@@ -72,15 +72,14 @@ clean: ## Clean up containers and images
 
 .PHONY: clean-all
 clean-all: clean ## Clean up everything including volumes
-	@echo "Removing all data..."
+	@echo "Removing Docker volumes (NFS mounts will be unmounted)..."
 	docker volume prune -f
-	rm -rf logs/
 
 # Firmware management
 .PHONY: list-updates
-list-updates: ## List available firmware files in updates directory
-	@echo "Available firmware files:"
-	@ls -la updates/ || echo "No files found in updates/ directory"
+list-updates: ## List available firmware files on NFS server
+	@echo "Available firmware files on NFS server:"
+	@docker run --rm -v remarkable_updates:/mnt $(IMAGE_NAME) ls -la /mnt/ || echo "Cannot access NFS volume or no files found"
 
 .PHONY: check-connection
 check-connection: ## Test connection to the server
