@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: remarkable-update-server
     ports:
-      - "8000:8000"
+      - "80:8000"
     volumes:
       # Mount NFS updates directory to container
       - remarkable_updates:/app/updates
@@ -15,7 +15,7 @@ services:
       - remarkable_logs:/app/logs
     environment:
       # Set this to your computer's IP address that the reMarkable can reach
-      # For USB connection: usually 10.11.99.2
+      # For USB connection: usually 10.11.99.2 (device will connect on port 80)
       # For WiFi connection: your local IP (e.g., 192.168.1.25)
       - HOST_IP=192.168.0.154
     networks:
