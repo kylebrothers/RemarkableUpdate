@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
     container_name: remarkable-update-server
     ports:
-      - "80:8000"
+      - "8000:8000"
     volumes:
       # Mount NFS updates directory to container
       - remarkable_updates:/app/updates
